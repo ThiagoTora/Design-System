@@ -1,16 +1,18 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-
-import path, { dirname } from "path"
-
+import { dirname, resolve } from "path"
 import { fileURLToPath } from "url"
+
+// Recriando o __dirname para ambiente ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
 * This function is used to resolve the absolute path of a package.
-* It is needed in projects that use Yarn PnP or are set up within a monorepo.
 */
 function getAbsolutePath(value: string) {
   return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)))
 }
+
 const config: StorybookConfig = {
   "stories": [
     "../src/pages/**/*.mdx",
@@ -24,7 +26,7 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-onboarding'),
   ],
   "framework": {
-    name: getAbsolutePath('@storybook/react-vite'),
+    name: getAbsolutePath('@storybook/react-vite') as '@storybook/react-vite',
     options: {}
   },
 
@@ -33,18 +35,17 @@ const config: StorybookConfig = {
       ...config.resolve,
       alias: {
         ...config.resolve?.alias,
-        // Isso força o Vite a buscar o código direto na dist sem passar pelo resolver bugado do node_modules
-        '@ignite-ui/tokens': path.resolve(__dirname, '../../tokens/dist/index.mjs'),
-        '@ignite-ui/react': path.resolve(__dirname, '../../react/dist/index.mjs'),
+        '@ignite-ui/tokens': resolve(__dirname, '../../tokens/dist/index.mjs'),
+        '@ignite-ui/react': resolve(__dirname, '../../react/dist/index.mjs'),
       },
     };
 
-    if (configType === 'PRODUCTION') {
-      config.base = '/Design-System/';
+    if (configType === "PRODUCTION") {
+      config.base = "/Design-System/"
     }
     
-    return config;
-  },
-
+    return config
+  }
 };
+
 export default config;
