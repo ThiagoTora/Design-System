@@ -36,4 +36,10 @@ jobs:
 
       - name: Deploy storybook
         working-directory: ./packages/docs
-        run: npx storybook-to-ghpages --ci --existing-output-dir=storybook-static --token ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          npx storybook-to-ghpages \
+            --ci \
+            --existing-output-dir=storybook-static \
+            --remote-url https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
