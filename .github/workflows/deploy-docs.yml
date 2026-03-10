@@ -17,12 +17,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --include=dev
+        run: npm install
 
-      - name: Build all packages
-        run: npm run build --workspaces --if-present
+      - name: Build Tokens
+        run: npm run build --workspace=@ignite-ui/tokens
+
+      - name: Build React
+        run: npm run build --workspace=@ignite-ui/react
 
       - name: Build Storybook
         working-directory: ./packages/docs
@@ -32,4 +36,4 @@ jobs:
         working-directory: ./packages/docs
         run: npm run deploy-storybook -- --ci --existing-output-dir=storybook-static
         env:
-          GH_TOKEN: ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
