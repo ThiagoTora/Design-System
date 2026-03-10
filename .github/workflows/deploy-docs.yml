@@ -34,12 +34,9 @@ jobs:
         working-directory: ./packages/docs
         run: npm run build-storybook 
 
-      - name: Deploy storybook
-        working-directory: ./packages/docs
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          npx storybook-to-ghpages \
-            --ci \
-            --existing-output-dir=storybook-static \
-            --remote-url https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: packages/docs/storybook-static 
+          branch: gh-pages 
+          clean: true
