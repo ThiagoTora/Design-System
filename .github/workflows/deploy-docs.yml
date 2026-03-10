@@ -30,7 +30,7 @@ jobs:
 
       - name: Build Storybook
         working-directory: ./packages/docs
-        run: npm run build-storybook -- --base /${{ github.event.repository.name }}
+        run: npm run build-storybook 
 
       - name: Deploy storybook
         working-directory: ./packages/docs
