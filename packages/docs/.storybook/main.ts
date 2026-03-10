@@ -1,32 +1,20 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-import { dirname, resolve } from "path"
-import { fileURLToPath } from "url"
-
-// Recriando o __dirname para ambiente ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-/**
-* This function is used to resolve the absolute path of a package.
-*/
-function getAbsolutePath(value: string) {
-  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)))
-}
+import { resolve } from "path"; // Mudei para resolve para garantir caminho absoluto
 
 const config: StorybookConfig = {
-  "stories": [
+  stories: [
     "../src/pages/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx|mdx)"
   ],
-  "addons": [
-    getAbsolutePath('@chromatic-com/storybook'),
-    getAbsolutePath('@storybook/addon-vitest'),
-    getAbsolutePath('@storybook/addon-a11y'),
-    getAbsolutePath('@storybook/addon-docs'),
-    getAbsolutePath('@storybook/addon-onboarding'),
+  addons: [
+    "@chromatic-com/storybook",
+    "@storybook/addon-vitest",
+    "@storybook/addon-a11y",
+    "@storybook/addon-docs",
+    "@storybook/addon-onboarding",
   ],
-  "framework": {
-    name: getAbsolutePath('@storybook/react-vite') as '@storybook/react-vite',
+  framework: {
+    name: "@storybook/react-vite",
     options: {}
   },
 
@@ -35,16 +23,17 @@ const config: StorybookConfig = {
       ...config.resolve,
       alias: {
         ...config.resolve?.alias,
-        '@ignite-ui/tokens': resolve(__dirname, '../../tokens/dist/index.mjs'),
-        '@ignite-ui/react': resolve(__dirname, '../../react/dist/index.mjs'),
+        // Usar resolve('..', 'pacote') é mais seguro no CI
+        '@ignite-ui/tokens': resolve('../tokens/dist/index'),
+        '@ignite-ui/react': resolve('../react/dist/index'),
       },
     };
 
     if (configType === "PRODUCTION") {
-      config.base = "/Design-System/"
+      config.base = "/Design-System/";
     }
     
-    return config
+    return config;
   }
 };
 
