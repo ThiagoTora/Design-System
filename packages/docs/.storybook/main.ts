@@ -32,6 +32,10 @@ const config: StorybookConfig = {
   async viteFinal(config, { configType }) {
     if (configType === "PRODUCTION") {
       config.base = "/Design-System/"
+      config.build = {
+      ...config.build,
+      assetsDir: "assets"
+    }
     }
     return config
   }
