@@ -1,6 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 
-import { dirname } from "path"
+import path, { dirname } from "path"
 
 import { fileURLToPath } from "url"
 
@@ -29,11 +29,22 @@ const config: StorybookConfig = {
   },
 
   async viteFinal(config, { configType }) {
-    if (configType === "PRODUCTION") {
-      config.base = "/Design-System/"
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+        // Isso força o Vite a buscar o código direto na dist sem passar pelo resolver bugado do node_modules
+        '@ignite-ui/tokens': path.resolve(__dirname, '../../tokens/dist/index.mjs'),
+        '@ignite-ui/react': path.resolve(__dirname, '../../react/dist/index.mjs'),
+      },
+    };
+
+    if (configType === 'PRODUCTION') {
+      config.base = '/Design-System/';
     }
-    return config
-  }
+    
+    return config;
+  },
 
 };
 export default config;
