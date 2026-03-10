@@ -1,5 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
-import { resolve } from "path"; // Mudei para resolve para garantir caminho absoluto
+import { resolve } from "path"; 
 
 const config: StorybookConfig = {
   stories: [
@@ -23,7 +23,6 @@ const config: StorybookConfig = {
       ...config.resolve,
       alias: {
         ...config.resolve?.alias,
-        // Usar resolve('..', 'pacote') é mais seguro no CI
         '@ignite-ui/tokens': resolve('../tokens/dist/index'),
         '@ignite-ui/react': resolve('../react/dist/index'),
       },
