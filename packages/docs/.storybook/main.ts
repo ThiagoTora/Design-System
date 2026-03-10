@@ -22,7 +22,6 @@ const config: StorybookConfig = {
     getAbsolutePath('@storybook/addon-a11y'),
     getAbsolutePath('@storybook/addon-docs'),
     getAbsolutePath('@storybook/addon-onboarding'),
-    getAbsolutePath('@storybook/addon-a11y'),
   ],
   "framework": {
     name: getAbsolutePath('@storybook/react-vite'),
@@ -32,10 +31,6 @@ const config: StorybookConfig = {
   async viteFinal(config, { configType }) {
     if (configType === "PRODUCTION") {
       config.base = "/Design-System/"
-      config.build = {
-      ...config.build,
-      assetsDir: "assets"
-    }
     }
     return config
   }
