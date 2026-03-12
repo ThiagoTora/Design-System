@@ -6,10 +6,17 @@
   ],
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "build": "turbo run build"
+    "build": "turbo run build",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build --filter=@ignite-ui/docs && changeset publish"
   },
-
   "devDependencies": {
     "turbo": "^2.8.12"
+  },
+  "dependencies": {
+    "-": "^0.0.1",
+    "@changesets/cli": "^2.30.0",
+    "D": "^1.0.0"
   }
 }
