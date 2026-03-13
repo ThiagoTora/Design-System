@@ -30,7 +30,8 @@ jobs:
       - name: Build React
         run: npm run build --workspace=@ignite-ui/react
 
-      - name: Remote Caching
+      - name: Build packages
+        run: npm run build
         env:
           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
