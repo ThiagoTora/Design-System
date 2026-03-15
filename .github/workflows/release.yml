@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+       - name: Checkout
+         uses: actions/checkout@v4
+
+      -  name: Setup Node.js
+         uses: actions/setup-node@v4
+         with:
+           node-version: 22
+           cache: 'npm'
+           cache-dependency-path: '**/package-lock.json'
+
+      -  name: Install dependencies
+         run: npm install
+
+      -  name: Build Tokens
+         run: npm run build --workspace=@ignite-ui/tokens
+
+      -  name: Build React
+         run: npm run build --workspace=@ignite-ui/react
+
+      -  name: Build packages
+         run: npm run build
+       
+      -  name: Publish to npm
+         id: changesets
+         uses: changesets/action@v1
+         with:
+           publish: npm run release
+         env:
+           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+           TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+           TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
