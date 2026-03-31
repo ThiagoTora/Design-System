@@ -1,7 +1,7 @@
 import { ComponentProps } from 'react'
 import { styled } from '../styles'
 
-export const TextArea = styled('input', {
+export const TextArea = styled('textarea', {
   borderRadius: '$sm',
   border: '2px solid $gray900',
   boxSizing: 'border-box',
