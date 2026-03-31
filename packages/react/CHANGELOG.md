@@ -1,5 +1,11 @@
 # @ignite-ui/react
 
+## 3.0.0
+
+### Major Changes
+
+- Creating a new component Register
+
 ## 2.0.1
 
 ### Patch Changes
