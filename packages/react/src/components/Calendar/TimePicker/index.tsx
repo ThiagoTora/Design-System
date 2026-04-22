@@ -22,6 +22,10 @@ export function TimePicker({
   onClose,
   onConfirm,
 }: TimePickerProps) {
+  if (!selectedDate) {
+    return null
+  }
+
   const dayAndMonth = selectedDate.toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long',
@@ -67,15 +71,7 @@ export function TimePicker({
               key={time}
               disabled={isUnavailable}
               onClick={() => onSelectTime(time)}
-              css={
-                selectedTime === time
-                  ? {
-                      backgroundColor: '$ignite500',
-                      color: '$white',
-                      cursor: 'default',
-                    }
-                  : {}
-              }
+              selected={selectedTime === time}
             >
               {time}
             </TimePickerItem>
@@ -87,6 +83,7 @@ export function TimePicker({
         <Button
           variant="primary"
           onClick={onConfirm}
+          disabled={!selectedTime}
           css={{
             marginTop: '$4',
             width: '100%',

@@ -28,12 +28,33 @@ import { TimePicker } from './TimePicker'
 export interface CalendarProps extends ComponentProps<typeof Container> {
   src?: string
   alt?: string
+  initialDate?: Date
+  initialTime?: string
+  initialStep?: 'date' | 'time' | 'confirm'
 }
 
-export function Calendar({ src, alt }: CalendarProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>()
-  const [selectedTime, setSelectedTime] = useState<string | undefined>()
-  const [isTimeConfirmed, setIsTimeConfirmed] = useState(false)
+type Step = 'date' | 'time' | 'confirm'
+
+export function Calendar({
+  src,
+  alt,
+  initialDate,
+  initialTime,
+  initialStep,
+}: CalendarProps) {
+  const [step, setStep] = useState<Step>(() => {
+    if (initialStep) return initialStep
+    if (initialDate) return 'time'
+    return 'date'
+  })
+
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    initialDate,
+  )
+
+  const [selectedTime, setSelectedTime] = useState<string | undefined>(
+    initialTime,
+  )
   const isDateSelected = !!selectedDate
 
   const dayAndMonthAndYear = selectedDate?.toLocaleDateString('pt-BR', {
@@ -42,14 +63,28 @@ export function Calendar({ src, alt }: CalendarProps) {
     year: 'numeric',
   })
 
+  function handleSelectDate(date: Date) {
+    setSelectedDate(date)
+    setSelectedTime(undefined)
+    setStep('time')
+  }
+
   function handleConfirmTime() {
-    setIsTimeConfirmed(true)
+    if (!selectedTime) return
+    setStep('confirm')
+  }
+
+  function handleReset() {
+    setStep('date')
+    setSelectedDate(undefined)
+    setSelectedTime(undefined)
   }
 
   function handleFinishAppointment() {
-    setIsTimeConfirmed(false)
-    setSelectedDate(undefined)
-    setSelectedTime(undefined)
+    const date = dayAndMonthAndYear
+    const time = selectedTime
+
+    handleReset()
 
     toast.message(
       <ToastTitleContainer>
@@ -59,7 +94,7 @@ export function Calendar({ src, alt }: CalendarProps) {
       {
         description: (
           <ToastDescription>
-            {dayAndMonthAndYear} às {selectedTime}
+            {date} às {time}
           </ToastDescription>
         ),
         duration: 5000,
@@ -68,9 +103,10 @@ export function Calendar({ src, alt }: CalendarProps) {
   }
 
   function handleCancelAppointment() {
-    setIsTimeConfirmed(false)
-    setSelectedDate(undefined)
-    setSelectedTime(undefined)
+    const date = dayAndMonthAndYear
+    const time = selectedTime
+
+    handleReset()
 
     toast.message(
       <ToastTitleContainer>
@@ -80,7 +116,7 @@ export function Calendar({ src, alt }: CalendarProps) {
       {
         description: (
           <ToastDescription>
-            {dayAndMonthAndYear} às {selectedTime}
+            {date} às {time}
           </ToastDescription>
         ),
         duration: 5000,
@@ -109,35 +145,25 @@ export function Calendar({ src, alt }: CalendarProps) {
           },
         }}
       />
+
       <AvatarContainer>
         <Avatar src={src} alt={alt} />
-        <Text
-          css={{
-            fontSize: '$lg',
-          }}
-        >
-          Thiago Torá
-        </Text>
-        <Text
-          css={{
-            fontSize: '$sm',
-            color: '$gray400',
-          }}
-        >
+        <Text css={{ fontSize: '$lg' }}>Thiago Torá</Text>
+        <Text css={{ fontSize: '$sm', color: '$gray400' }}>
           Estudante Eng. Software
         </Text>
       </AvatarContainer>
-      <CalendarioBox // CONTAINER PAI
-        css={{
-          width: isTimeConfirmed ? 540 : isDateSelected ? 780 : 540,
-          minHeight: isTimeConfirmed ? 550 : 380,
 
+      <CalendarioBox
+        css={{
+          width: step === 'confirm' ? 540 : isDateSelected ? 780 : 540,
+          minHeight: step === 'confirm' ? 550 : 380,
           transition: 'all 0.2s ease-in-out',
           margin: '0 auto',
           display: 'flex',
         }}
       >
-        {isTimeConfirmed ? (
+        {step === 'confirm' ? (
           <ConfirmContainer>
             <ConfirmHeaderContainer>
               <Text css={{ display: 'flex', alignItems: 'center', gap: '$2' }}>
@@ -172,7 +198,12 @@ export function Calendar({ src, alt }: CalendarProps) {
               <Button variant="secondary" onClick={handleCancelAppointment}>
                 Cancelar
               </Button>
-              <Button onClick={handleFinishAppointment}>Confirmar</Button>
+              <Button
+                onClick={handleFinishAppointment}
+                disabled={!selectedTime}
+              >
+                Confirmar
+              </Button>
             </ConfirmFinishContainer>
           </ConfirmContainer>
         ) : (
@@ -185,7 +216,7 @@ export function Calendar({ src, alt }: CalendarProps) {
                   locale={ptBR}
                   onSelect={(date) => {
                     if (!date) return
-                    setSelectedDate(date)
+                    handleSelectDate(date)
                   }}
                   formatters={{
                     formatCaption: (date) => {
@@ -193,10 +224,9 @@ export function Calendar({ src, alt }: CalendarProps) {
                         month: 'long',
                       })
                       const year = date.getFullYear()
-
-                      const capitalizedMonth =
+                      return `${
                         month.charAt(0).toUpperCase() + month.slice(1)
-                      return `${capitalizedMonth} ${year}`
+                      } ${year}`
                     },
                   }}
                   navLayout="after"
@@ -205,7 +235,6 @@ export function Calendar({ src, alt }: CalendarProps) {
                     to: new Date(2026, 3, 19),
                   }}
                   components={{
-                    // INFO QUE APARECE AO SOBREPOR O MOUSE
                     DayButton: (props) => {
                       const { modifiers, day } = props
                       const isDisabled = modifiers.disabled
@@ -213,8 +242,7 @@ export function Calendar({ src, alt }: CalendarProps) {
                       const monthName = day.date.toLocaleString('pt-BR', {
                         month: 'long',
                       })
-                      const formattedMonth =
-                        monthName.charAt(0).toUpperCase() + monthName.slice(1)
+
                       return (
                         <Tooltip.Root>
                           <Tooltip.Trigger asChild>
@@ -226,8 +254,8 @@ export function Calendar({ src, alt }: CalendarProps) {
                           <Tooltip.Portal>
                             <TooltipContent sideOffset={5}>
                               {isDisabled
-                                ? `${dayNumber} de ${formattedMonth} - Indisponível`
-                                : `${dayNumber} de ${formattedMonth} - Disponível`}
+                                ? `${dayNumber} de ${monthName} - Indisponível`
+                                : `${dayNumber} de ${monthName} - Disponível`}
                               <TooltipArrow />
                             </TooltipContent>
                           </Tooltip.Portal>
@@ -239,15 +267,12 @@ export function Calendar({ src, alt }: CalendarProps) {
               </Tooltip.Provider>
             </CalendarContainer>
 
-            {isDateSelected && ( // CONTAINER DOS HORARIOS
+            {step === 'time' && selectedDate && (
               <TimePicker
-                selectedDate={selectedDate!}
+                selectedDate={selectedDate}
                 selectedTime={selectedTime}
                 onSelectTime={setSelectedTime}
-                onClose={() => {
-                  setSelectedDate(undefined)
-                  setSelectedTime(undefined)
-                }}
+                onClose={handleReset}
                 onConfirm={handleConfirmTime}
               />
             )}
@@ -257,4 +282,5 @@ export function Calendar({ src, alt }: CalendarProps) {
     </Container>
   )
 }
+
 Calendar.displayName = 'Calendar'

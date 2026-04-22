@@ -41,3 +41,24 @@ export default {
 export const Primary: StoryObj<CalendarProps> = {
   args: {},
 }
+
+export const WithDate: StoryObj<CalendarProps> = {
+  args: {
+    initialDate: new Date(2026, 3, 20),
+  },
+}
+
+export const WithTime: StoryObj<CalendarProps> = {
+  args: {
+    initialDate: new Date(2026, 3, 20),
+    initialTime: '09:00h',
+  },
+}
+
+export const Confirm: StoryObj<CalendarProps> = {
+  args: {
+    initialDate: new Date(2026, 3, 20),
+    initialTime: '09:00h',
+    initialStep: 'confirm',
+  },
+}

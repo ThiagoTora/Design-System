@@ -75,4 +75,18 @@ export const TimePickerItem = styled('button', {
     cursor: 'default',
     opacity: 0.4,
   },
+
+  variants: {
+    selected: {
+      true: {
+        backgroundColor: '$ignite500',
+        color: '$white',
+        cursor: 'default',
+
+        '&:hover': {
+          backgroundColor: '$ignite500',
+        },
+      },
+    },
+  },
 })
