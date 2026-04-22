@@ -1,0 +1,3 @@
+import{j as o}from"./index-cKwemIz7.js";import{c as s,d as t,a as e,C as m,B as n,g as i}from"./index-DgCKYXVS.js";import"./iframe-CuHg4Xe0.js";import"./preload-helper-q5DnXBVr.js";import"./index-DDJqUW9u.js";import"./index-DEGNd5Sg.js";i();const x={title:"Form/Calendar",component:m,args:{src:"https://github.com/ThiagoTora.png",alt:"Thiago Torá"},subcomponents:{Button:e,TextInput:t,TextArea:s},decorators:[a=>o.jsx(n,{as:"main",css:{display:"flex",flexDirection:"column",gap:"$4",maxWidth:950,margin:"$20 auto"},children:a()})]},r={args:{}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
+  args: {}
+}`,...r.parameters?.docs?.source}}};const h=["Primary"];export{r as Primary,h as __namedExportsOrder,x as default};
