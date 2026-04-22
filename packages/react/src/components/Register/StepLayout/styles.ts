@@ -1,7 +1,7 @@
 import { styled } from '../../../styles'
 
 export const StepContainer = styled('div', {
-  marginTop: '$6',
+  marginTop: '$4',
   display: 'flex',
   flexDirection: 'column',
 })

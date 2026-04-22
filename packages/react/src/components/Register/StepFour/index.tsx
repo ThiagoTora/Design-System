@@ -43,8 +43,8 @@ export function StepFour({
               border: '2px solid $ignite300',
               color: '$ignite300',
               '&:hover': {
-                backgroundColor: '$ignite500',
-                color: '$ignite500',
+                backgroundColor: '$ignite700',
+                color: '$white',
               },
             }}
           >

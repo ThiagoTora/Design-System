@@ -1,4 +1,8 @@
 {
   "extends": "@ignite-ui/ts-config/react.json",
-  "include": ["src"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "target": "ESNext"
+  },
+  "include": ["src"]
 }
